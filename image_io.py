@@ -27,7 +27,7 @@ def display_image(filename):
 #Private functions
 def _read_image(filename):
     image_path = f"input/{filename}"
-    image = Image.open(image_path)
+    image = Image.open(image_path).convert('RGBA')
     return image
 
 def _create_image(filename, pixels, width, height):
@@ -46,68 +46,67 @@ def _create_image(filename, pixels, width, height):
         out += "\n"
     
     out += RESET
+
+    filename_out = "output/" + os.path.splitext(filename)[0] + ".txt"
+    with open(filename_out, "w") as file:
+        file.write(out)
+
     print(out)
             
-def _get_pixel_output(top, bottom, prev_text_color, prev_bg_color):
+def _get_pixel_output(top_pixel, bottom_pixel, prev_text_color, prev_bg_color):
     out = ""
-    color = ""
-    bg_color = ""
-
-    if len(top) == 3:
-        top_pixel = top + (255, 0)
-        bottom_pixel = bottom + (255, 0)
-    else:
-        top_pixel = top
-        bottom_pixel = bottom
-
     if top_pixel[3] == 0 and bottom_pixel[3] == 0:
-        pass
-    
+        if prev_bg_color == "" and prev_text_color == "":
+            out += " "
+        else:
+            prev_text_color = ""
+            prev_bg_color = ""
+            out += RESET + " "
+
     elif top_pixel[3] == 0:
-        color = TEXT_COLOR.format(r=bottom_pixel[0], g=bottom_pixel[1], b=bottom_pixel[2])
+        if prev_bg_color == "":
+            color = TEXT_COLOR.format(r=bottom_pixel[0], g=bottom_pixel[1], b=bottom_pixel[2])
+            if color == prev_text_color:
+                out += BOTTOM_PIXEL
+            else:
+                out += color + BOTTOM_PIXEL
+                prev_text_color = color
+        else:
+            out += RESET
+            color = TEXT_COLOR.format(r=bottom_pixel[0], g=bottom_pixel[1], b=bottom_pixel[2])
+            out += color + BOTTOM_PIXEL
+            if color != prev_text_color:
+                prev_text_color = color
 
     elif bottom_pixel[3] == 0:
-        color = TEXT_COLOR.format(r=top_pixel[0], g=top_pixel[1], b=top_pixel[2])
+        if prev_bg_color == "":
+            color = TEXT_COLOR.format(r=top_pixel[0], g=top_pixel[1], b=top_pixel[2])
+            if color == prev_text_color:
+                out += TOP_PIXEL
+            else:
+                out += color + TOP_PIXEL
+                prev_text_color = color
+        else:
+            out += RESET
+            color = TEXT_COLOR.format(r=top_pixel[0], g=top_pixel[1], b=top_pixel[2])
+            out += color + TOP_PIXEL
+            if color != prev_text_color:
+                prev_text_color = color
+        
     else:
-        color = TEXT_COLOR.format(r=top_pixel[0], g=top_pixel[1], b=top_pixel[2])
+        text_color = TEXT_COLOR.format(r=top_pixel[0], g=top_pixel[1], b=top_pixel[2])
         bg_color = BACKGROUND_COLOR.format(r=bottom_pixel[0], g=bottom_pixel[1], b=bottom_pixel[2])
 
+        if text_color != prev_text_color:
+            out += text_color
+            prev_text_color = text_color
 
-
-    if top_pixel[3] == 0 and bottom_pixel[3] == 0:
-        out += RESET + " "
-        prev_text_color = ""
-        prev_bg_color = ""
-    
-    elif bg_color == prev_bg_color and prev_text_color == color:
-        if top_pixel[3] == 0:
-            out += BOTTOM_PIXEL
-        else:
-            out += TOP_PIXEL
-    
-    elif top_pixel[3] == 0:
-        out += RESET + color + BOTTOM_PIXEL
-        prev_text_color = prev_text_color
-        prev_bg_color = ""
-
-    elif bottom_pixel[3] == 0:
-        out += RESET + color + TOP_PIXEL
-        prev_text_color = color
-        prev_bg_color = ""
-
-    else:
-        if prev_text_color != color:
-            out += color
-            prev_text_color = color
-        if prev_bg_color != bg_color:
+        if bg_color != prev_bg_color:
             out += bg_color
             prev_bg_color = bg_color
 
-        if top_pixel[3] == 0:
-            out += BOTTOM_PIXEL
-        else:
-            out += TOP_PIXEL
-
+        out += TOP_PIXEL
+        
 
     return out, prev_text_color, prev_bg_color
 
