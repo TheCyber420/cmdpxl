@@ -41,7 +41,6 @@ def main():
     args = parser.parse_args()
 
     if args.name:
-        print(args.name)
         create_new_sprite(args.name)
 
 if __name__ == "__main__":
