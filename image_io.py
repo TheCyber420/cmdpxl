@@ -21,8 +21,23 @@ def _read_image(filename, size):
     image = Image.open(image_path).convert('RGBA')
 
     if size != None:
-        width, height = map(int, size.split('x'))
-        image = image.resize((width, height), Image.LANCZOS)
+        if 'x' in size:
+            width, height = map(int, size.split('x'))
+            image = image.resize((width, height), Image.LANCZOS)
+        else:
+            width , height = image.size
+            max_size = int(size)
+            ratio = width / height
+
+            if width > height:
+                new_width = max_size
+                new_height = int(max_size / ratio)
+            else:
+                new_height = max_size
+                new_width = int(max_size * ratio)
+
+            image = image.resize((new_width, new_height), Image.LANCZOS)
+            
 
     return image
 
