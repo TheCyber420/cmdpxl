@@ -7,21 +7,18 @@ TOP_PIXEL = "▀"
 BOTTOM_PIXEL = "▄"
 
 #Public functions
-def create_new_sprite(filename):
-    if not os.path.exists(f"input/{filename}"):
-        print(f"An error has occured:\nFile {filename} not found")
-        return
-    
+def create_new_sprite(filename):    
     image = _read_image(filename)
     width , height = image.size
     _create_image(filename, list(image.getdata()), width, height)
 
 def display_image(filename):
-    pass
+    with open(filename, "r") as file:
+        print(file.read())
 
 #Private functions
 def _read_image(filename):
-    image_path = f"input/{filename}"
+    image_path = f"{filename}"
     image = Image.open(image_path).convert('RGBA')
     return image
 

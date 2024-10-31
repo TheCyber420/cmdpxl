@@ -1,6 +1,8 @@
 from PIL import Image
+from pathlib import Path
+from image_io import create_new_sprite, display_image
 import argparse
-from image_io import create_new_sprite
+import os
 
 def main(): 
 
@@ -40,8 +42,22 @@ def main():
 
     args = parser.parse_args()
 
+
     if args.name:
-        create_new_sprite(args.name)
+        image_path = "output/" + args.name + ".txt"
+        display_image(image_path)
+        pass
+    
+    if args.add:
+        #create_new_sprite(args.add)
+        full_path = Path(args.add).resolve()
+
+        print(full_path)
+        if not full_path.is_file():
+            print(f"An error has occured\nFile {args.add} not found")
+        else:
+            create_new_sprite(full_path)
+
 
 if __name__ == "__main__":
     main()
