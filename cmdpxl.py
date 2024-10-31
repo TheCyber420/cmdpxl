@@ -34,7 +34,8 @@ def main():
         "-a",
         "--add",
         type=str,
-        help="Converts an image to ascii format and saves it to be displayed later"
+        nargs="*",
+        help="Converts an image to ascii format and saves it to be displayed later\nOptional additional argument: size <widthxheight>"
     )
 
     parser.add_argument(
@@ -51,13 +52,18 @@ def main():
         display_image(dir)
     
     if args.add:
-        full_path = Path(args.add).resolve()
+        if len(args.add) == 1:
+            filename = args.add[0]
+            size = None
+        elif len(args.add) == 2:
+            filename, size = args.add
+        
+        full_path = Path(filename).resolve()
 
-        print(full_path)
         if not full_path.is_file():
-            print(f"An error has occured\nFile {args.add} not found")
+            print(f"An error has occured\nFile {args.add[0]} not found")
         else:
-            create_new_sprite(full_path)
+            create_new_sprite(full_path, size)
 
 
 if __name__ == "__main__":
