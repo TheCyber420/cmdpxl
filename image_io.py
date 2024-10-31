@@ -6,8 +6,8 @@ TOP_PIXEL = "▀"
 BOTTOM_PIXEL = "▄"
 
 #Public functions
-def create_new_sprite(filename):    
-    image = _read_image(filename)
+def create_new_sprite(filename, size):    
+    image = _read_image(filename, size)
     width , height = image.size
     _create_image(filename, list(image.getdata()), width, height)
 
@@ -16,9 +16,14 @@ def display_image(filename):
         print(file.read())
 
 #Private functions
-def _read_image(filename):
+def _read_image(filename, size):
     image_path = f"{filename}"
     image = Image.open(image_path).convert('RGBA')
+
+    if size != None:
+        width, height = map(int, size.split('x'))
+        image = image.resize((width, height), Image.LANCZOS)
+
     return image
 
 def _create_image(filename, pixels, width, height):
