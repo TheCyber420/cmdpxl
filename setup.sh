@@ -2,8 +2,9 @@
 
 PROGRAM_NAME="cmdpxl"
 REQUIREMENTS_FILE="requirements.txt"
-SYMLINK_PATH="/usr/local/bin/$PROGRAM_NAME"
-$VENV_DIR=".venv"
+INSTALL_DIR=$HOME
+BIN_DIR="/usr/local/bin"
+VENV_DIR=".venv"
 MAIN_SCRIPT="cmdpxl.py"
 
 echo "Creating virtual environment..."
@@ -16,15 +17,29 @@ if [[ -f "$REQUIREMENTS_FILE" ]]; then
     echo "Installing dependencies..."
     pip install -r "$REQUIREMENTS_FILE"
 else
-    echo "Requirements file not found, skipping dependency installation."
+    echo "Requirements file #!/bin/bashnot found, skipping dependency installation."
 fi
 
 echo "Compiling Python files..."
-python3 -m compileall "$PROJECT_DIR"
+pyinstaller --onefile $MAIN_SCRIPT
+COMPILED_EXECUTABLE="dist/$PROGRAM_NAME"
+
+echo "Copying necessary files..."
+rm -rf "$INSTALL_DIR/$PROGRAM_NAME/$PROGRAM_NAME" || return 1
+mkdir -p "$INSTALL_DIR/$PROGRAM_NAME/output"
+mv "$COMPILED_EXECUTABLE" "$INSTALL_DIR/$PROGRAM_NAME"
+
 
 echo "Creating symlink..."
-ln -sf "$MAIN_SCRIPT" "$SYMLINK_PATH"
+sudo rm -rf "$BIN_DIR/$PROGRAM_NAME" || return 1
+sudo ln -s $INSTALL_DIR/$PROGRAM_NAME/$PROGRAM_NAME $BIN_DIR/$PROGRAM_NAME
 
 deactivate
+
+echo "Cleaning up..."
+rm -rf .venv
+rm -rf build
+rm -rf dist
+rm -f "$PROGRAM_NAME.spec"
 
 echo "Setup complete."

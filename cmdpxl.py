@@ -1,8 +1,11 @@
+import argparse
+import sys
 from PIL import Image
 from pathlib import Path
 from image_io import create_new_sprite, display_image
-import argparse
-import os
+
+PROGRAM_DIR = str(Path(sys.executable).parent) + "/"
+OUTPUT_DIR = PROGRAM_DIR + "output/"
 
 def main(): 
 
@@ -44,12 +47,10 @@ def main():
 
 
     if args.name:
-        image_path = "output/" + args.name + ".txt"
-        display_image(image_path)
-        pass
+        dir = OUTPUT_DIR + args.name + ".txt"
+        display_image(dir)
     
     if args.add:
-        #create_new_sprite(args.add)
         full_path = Path(args.add).resolve()
 
         print(full_path)

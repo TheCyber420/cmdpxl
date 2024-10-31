@@ -1,18 +1,20 @@
 from pathlib import Path
-
+import sys
 #Constants
 
 TEXT_COLOR = "\033[38;2;{r};{g};{b}m"
 BACKGROUND_COLOR = "\033[48;2;{r};{g};{b}m"
 RESET = "\033[0m"
+PROGRAM_DIR = Path(sys.executable).parent
 
 class Filewriter:
     prev_bg_color = ""
     prev_text_color = ""
     def __init__(self, filename) -> None:
-        new_filename = "output/" + Path(filename).stem + ".txt"
-        self.filename = new_filename
-        with open(new_filename, "w"):
+        new_filename = Path(filename).stem + ".txt"
+        new_file_dir = PROGRAM_DIR / "output" / new_filename
+        self.filename = new_file_dir
+        with open(self.filename, "w"):
             pass
 
     def write_empty(self):

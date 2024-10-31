@@ -1,6 +1,5 @@
 from PIL import Image
 from filewriter import Filewriter
-import os
 
 #Constants
 TOP_PIXEL = "▀"
