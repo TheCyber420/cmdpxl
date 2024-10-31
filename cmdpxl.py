@@ -1,5 +1,6 @@
 import argparse
 import sys
+import os
 from PIL import Image
 from pathlib import Path
 from image_io import create_new_sprite, display_image
@@ -41,6 +42,7 @@ def main():
     parser.add_argument(
         "-l",
         "--list",
+        action='store_true',
         help="List the names of the images available for output"
     )
 
@@ -64,6 +66,12 @@ def main():
             print(f"An error has occured\nFile {args.add[0]} not found")
         else:
             create_new_sprite(full_path, size)
+    
+    if args.list:
+        files = os.listdir(OUTPUT_DIR)
+        files.sort()
+        for file in files:
+            print(file.removesuffix(".txt"))
 
 
 if __name__ == "__main__":
