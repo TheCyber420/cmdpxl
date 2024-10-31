@@ -23,7 +23,7 @@ def _read_image(filename, size):
     if size != None:
         if 'x' in size:
             width, height = map(int, size.split('x'))
-            image = image.resize((width, height), Image.LANCZOS)
+            image = image.resize((width, height), Image.BOX)
         else:
             width , height = image.size
             max_size = int(size)
@@ -36,7 +36,7 @@ def _read_image(filename, size):
                 new_height = max_size
                 new_width = int(max_size * ratio)
 
-            image = image.resize((new_width, new_height), Image.LANCZOS)
+            image = image.resize((new_width, new_height), Image.BOX)
             
 
     return image
