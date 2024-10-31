@@ -38,12 +38,6 @@ def _create_image(filename, pixels, width, height):
             else:
                 bottom_pixel = pixels[bottom_idx]
 
-            if top_pixel[0] == 25 and top_pixel[1] == 255 and top_pixel[2] == 255:
-                print(top_pixel)
-
-            if bottom_pixel[0] == 255 and bottom_pixel[1] == 255 and bottom_pixel[2] == 255:
-                print(bottom_pixel)
-
             if bottom_pixel[3] < 10 and top_pixel[3] < 10:
                 writer.write_empty()
             elif bottom_pixel[3] < 10:
