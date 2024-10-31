@@ -1,7 +1,6 @@
 import argparse
 import sys
 import os
-from PIL import Image
 from pathlib import Path
 from image_io import create_new_sprite, display_image
 
